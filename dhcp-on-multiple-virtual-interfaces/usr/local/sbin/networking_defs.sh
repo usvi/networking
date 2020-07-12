@@ -7,7 +7,7 @@ IF_VIRTUAL_BASE=eth0
 IF_PUB0=virtual0
 IF_PUB1=virtual1
 IF_PUB2=virtual2
-IF_LAN=eth3
+IF_LAN=eth2
 # For Openvpn
 IF_TUN=tun0
 
