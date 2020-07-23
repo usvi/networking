@@ -20,7 +20,7 @@ conf_ifaces_on_gw_change ()
     then
 	logger "Running $IF_PUB1 interface scripts due to gw change"
 	/usr/local/sbin/policy_route_dhcp.sh "$IF_PUB1"
-	/usr/local/sbin/firewall_interface1.sh
+	/usr/local/sbin/firewall_interface_pub1.sh
 
 	if [ -n "$USE_DY_FI" ];
 	then
@@ -31,7 +31,7 @@ conf_ifaces_on_gw_change ()
     then
 	logger "Running $IF_PUB2 interface scripts due to gw change"
 	/usr/local/sbin/policy_route_dhcp.sh "$IF_PUB2"
-	/usr/local/sbin/firewall_interface2.sh
+	/usr/local/sbin/firewall_interface_pub2.sh
 
 	if [ -n "$USE_DY_FI" ];
 	then
@@ -63,22 +63,24 @@ case "$reason" in
 	    if [ "$reason" = "BOUND" -o "$reason" = "REBOOT" ];
 	    then
 		sync
+		/usr/local/sbin/firewall_interface_pub0.sh
 
 		if [ -n "$USE_OPENVPN" ];
 		then
 		    /usr/local/sbin/setup_vpn.sh
-		    /usr/local/sbin/firewall_vpn.sh
+		    /usr/local/sbin/firewall_interface_tun0.sh
 		fi
 		conf_ifaces_on_gw_change
 		
 	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		sync
+		/usr/local/sbin/firewall_interface_pub0.sh
 
 		if [ -n "$USE_OPENVPN" ];
 		then
 		    /usr/local/sbin/setup_vpn.sh
-		    /usr/local/sbin/firewall_vpn.sh
+		    /usr/local/sbin/firewall_interface_tun0.sh
 		fi
 		conf_ifaces_on_gw_change
 	    fi
@@ -99,12 +101,12 @@ case "$reason" in
 	    if [ "$reason" = "BOUND" -o "$reason" = "REBOOT" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh "$interface"
-		/usr/local/sbin/firewall_interface1.sh
+		/usr/local/sbin/firewall_interface_pub1.sh
 
 	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh "$interface"
-		/usr/local/sbin/firewall_interface1.sh
+		/usr/local/sbin/firewall_interface_pub1.sh
 	    fi
 	    if [ -n "$USE_DY_FI" ];
 	    then
@@ -122,11 +124,11 @@ case "$reason" in
 	    if [ "$reason" = "BOUND" -o "$reason" = "REBOOT" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh "$interface"
-		/usr/local/sbin/firewall_interface2.sh
+		/usr/local/sbin/firewall_interface_pub2.sh
 	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh "$interface"
-		/usr/local/sbin/firewall_interface2.sh
+		/usr/local/sbin/firewall_interface_pub2.sh
 	    fi
 	    if [ -n "$USE_DY_FI" ];
 	    then
