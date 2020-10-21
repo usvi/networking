@@ -3,8 +3,8 @@
 . /usr/local/sbin/networking_defs.sh
 
 
-ADDR_PUB2=`/sbin/ip -o -4 addr list $IF_PUB2 | sed s/.*'inet '// | sed s/\\\/.*//`
-ADDR_PUB_GW=`/sbin/ip -o -4 addr list $IF_PUB0 | sed s/.*'inet '// | sed s/\\\/.*//`
+ADDR_PUB2=$(get_ip_for_interface "$IF_PUB2")
+ADDR_PUB_GW=$(get_gw_for_interface "$IF_PUB0")
 
 
 # Flush tables

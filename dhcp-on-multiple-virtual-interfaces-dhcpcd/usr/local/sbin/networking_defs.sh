@@ -83,3 +83,20 @@ if_has_ip ()
 	echo "1"
     fi
 }
+
+get_ip_for_interface ()
+{
+    INTERFACE="$1"
+    IP=`/sbin/ip -o -4 addr list $INTERFACE | head -n 1 | sed s/.*'inet '// | sed s/\\\/.*//`
+
+    echo "$IP"
+}
+
+
+get_gw_for_interface ()
+{
+    INTERFACE="$1"
+    GW=`/sbin/ip -o -4 addr list $IF_PUB0 | head -n 1 | sed s/.*'inet '// | sed s/\\\/.*//`
+
+    echo "$GW"
+}
