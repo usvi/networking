@@ -15,20 +15,20 @@ iface virtual0 inet dhcp
 
 
 # Virtual interface virtual1 00:90:0b:ff:21:5b
-allow-hotplug virtual1
-iface virtual1 inet dhcp
-      # Mandatory comment, otherwise does not work :D
+#allow-hotplug virtual1
+#iface virtual1 inet dhcp
+#      # Mandatory comment, otherwise does not work :D
 
 
 # Virtual interface virtual2 00:90:0b:ff:22:5b
-allow-hotplug virtual2
-iface virtual2 inet dhcp
-      # Mandatory comment, otherwise does not work :D
+#allow-hotplug virtual2
+#iface virtual2 inet dhcp
+#      # Mandatory comment, otherwise does not work :D
 
 
 # LAN physical interface eth2 00:90:0b:3e:01:5d
-auto eth2
-iface eth2 inet static
+auto enp3s0
+iface enp3s0 inet static
       address 172.16.8.254
       netmask 255.255.255.0
       network 172.16.8.0

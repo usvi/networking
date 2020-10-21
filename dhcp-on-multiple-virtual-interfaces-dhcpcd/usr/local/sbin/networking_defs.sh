@@ -2,12 +2,12 @@
 
 # Names for interfaces
 # Virtual interface for macvlan magic
-IF_VIRTUAL_BASE=eth0
+IF_VIRTUAL_BASE=enp4s0
 # IF_PUB0 is explicit GW in scripts
 IF_PUB0=virtual0
 IF_PUB1=virtual1
 IF_PUB2=virtual2
-IF_LAN=eth2
+IF_LAN=enp3s0
 # For Openvpn
 IF_TUN=tun0
 
@@ -30,8 +30,8 @@ NEW_ROUTERS_TIME_TRESHOLD=60
 LOCK_WAIT_MAX_SECS=30
 
 # USE flags: Define non-zero if want enabled
-USE_DY_FI="yes"
-USE_OPENVPN="yes"
+USE_DY_FI="no"
+USE_OPENVPN="no"
 
 try_lock ()
 {
@@ -82,22 +82,4 @@ if_has_ip ()
     else
 	echo "1"
     fi
-}
-
-
-reset_fw_rules_by_tag ()
-{
-    if [ -z "$1" ];
-    then
-	return 1;
-    fi
-    iptables -L INPUT --line-numbers -n | tac | grep "$1" | while read line; do iptables -D INPUT `echo $line | sed s/\ .*//`; done
-    iptables -L FORWARD --line-numbers -n | tac | grep "$1" | while read line; do iptables -D FORWARD `echo $line | sed s/\ .*//`; done
-    iptables -L OUTPUT --line-numbers -n | tac | grep "$1" | while read line; do iptables -D OUTPUT `echo $line | sed s/\ .*//`; done
-    iptables -t nat -L PREROUTING --line-numbers -n | tac | grep "$1" | while read line; do iptables -t nat -D PREROUTING `echo $line | sed s/\ .*//`; done
-    iptables -t nat -L INPUT --line-numbers -n | tac | grep "$1" | while read line; do iptables -t nat -D INPUT `echo $line | sed s/\ .*//`; done
-    iptables -t nat -L OUTPUT --line-numbers -n | tac | grep "$1" | while read line; do iptables -t nat -D OUTPUT `echo $line | sed s/\ .*//`; done
-    iptables -t nat -L POSTROUTING --line-numbers -n | tac | grep "$1" | while read line; do iptables -t nat -D POSTROUTING `echo $line | sed s/\ .*//`; done
-
-    return 0;
 }
