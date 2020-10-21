@@ -14,7 +14,8 @@ mkdir -p "$DYFI_ADDRESS_DATA_DIR"
 # 2. If adresses are the same, update only if enough time has passed
 
 # Get current ip address (exit if not get
-CURRENT_IP=`/sbin/ifconfig $INTERFACE | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
+CURRENT_IP=$(get_ip_for_interface "$INTERFACE")
+
 
 if [ -z "$CURRENT_IP" ]; then
     exit 1;
