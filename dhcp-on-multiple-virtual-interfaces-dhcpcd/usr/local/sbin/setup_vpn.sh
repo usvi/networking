@@ -2,7 +2,7 @@
 
 . /usr/local/sbin/networking_defs.sh
 
-ADDR_PUB_VPN=`/sbin/ifconfig $IF_PUB0 | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
+ADDR_PUB_VPN=$(get_ip_for_interface "$IF_PUB0")
 OPENVPN_CONF_LISTEN="/etc/openvpn/listen.conf"
 
 echo "# Include this to openvpn confs via" > "$OPENVPN_CONF_LISTEN"

@@ -74,7 +74,7 @@ drop_lock ()
 if_has_ip ()
 {
     INTERFACE="$1"
-    TEST_IP=`/sbin/ifconfig $INTERFACE | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
+    TEST_IP=`/sbin/ip -o -4 addr list $INTERFACE | head -n 1 | sed s/.*'inet '// | sed s/\\\/.*//`
 
     if [ -z "$TEST_IP" ];
     then
