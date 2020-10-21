@@ -1,0 +1,13 @@
+[Unit]
+Description=Initializations for dhcp client running on multiple virtual interfaces
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /usr/local/sbin/interfaces_init.sh
+ExecStart=/bin/bash /usr/local/sbin/firewall_init.sh
+TimeoutStartSec=0
+RemainAfterExit=true
+
+[Install]
+WantedBy=default.target
