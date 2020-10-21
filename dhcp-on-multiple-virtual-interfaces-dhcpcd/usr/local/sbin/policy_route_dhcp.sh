@@ -18,27 +18,21 @@ then
     exit 1
 fi
 
+
 # Figure out interface ip
-IPADDR=`/sbin/ifconfig $INTERFACE | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
+IPADDR=$(get_ip_for_interface "$INTERFACE")
 if [ -z "$IPADDR" ]; then
     echo "Could not get IP address of interface!"
     exit 1;
 fi
 
 
-# Figure out netmask
-NETMASK=`/sbin/ifconfig $INTERFACE | grep 'inet addr:' | sed s/.*'Mask:'// | sed s/' '.*//`
-if [ -z "$NETMASK" ]; then
-    echo "Could not get netmask of interface!"
-    exit 1;
-fi
-
-# Figure out network
-IFS=. read -r i1 i2 i3 i4 <<< "$IPADDR"
-IFS=. read -r m1 m2 m3 m4 <<< "$NETMASK"
-NETWORK=`printf "%d.%d.%d.%d\n" "$((i1 & m1))" "$((i2 & m2))" "$((i3 & m3))" "$((i4 & m4))"`
-if [ -z "$NETWORK" ]; then
-    echo "Could not calculate network address!"
+# Figure out ip with mask to be used in routing
+# Earlier implementation calculated network/netmask
+# but this IP with mask is probably ok
+IP_WITH_MASK=$(get_ip_and_mask_for_interface "$INTERFACE")
+if [ -z "$IP_WITH_MASK" ]; then
+    echo "Could not get ip/netmask of interface!"
     exit 1;
 fi
 
@@ -52,7 +46,7 @@ done
 
 
 # Set new policy routing
-ip route add "$NETWORK/$NETMASK" dev "$INTERFACE" src "$IPADDR" table "$INTERFACE"
+ip route add "$IP_WITH_MASK" dev "$INTERFACE" src "$IPADDR" table "$INTERFACE"
 ip route add default via "$GATEWAY" dev "$INTERFACE" table "$INTERFACE"
 ip rule add from "$IPADDR/32" table "$INTERFACE"
 ip rule add to "$IPADDR/32" table "$INTERFACE"
