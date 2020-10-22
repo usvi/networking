@@ -27,14 +27,13 @@ if [ -z "$IPADDR" ]; then
 fi
 
 
-# Figure out ip with mask to be used in routing
-# Earlier implementation calculated network/netmask
-# but this IP with mask is probably ok
-IP_WITH_MASK=$(get_ip_and_mask_for_interface "$INTERFACE")
-if [ -z "$IP_WITH_MASK" ]; then
-    echo "Could not get ip/netmask of interface!"
+# Get the network in 12.34.56.0/24 form
+ID_NETWORK=$(get_network_for_interface "$INTERFACE")
+if [ -z "$ID_NETWORK" ]; then
+    echo "Could not get network of interface!"
     exit 1;
 fi
+
 
 
 # Flush old values
@@ -46,7 +45,7 @@ done
 
 
 # Set new policy routing
-ip route add "$IP_WITH_MASK" dev "$INTERFACE" src "$IPADDR" table "$INTERFACE"
+ip route add "$ID_NETWORK" dev "$INTERFACE" src "$IPADDR" table "$INTERFACE"
 ip route add default via "$GATEWAY" dev "$INTERFACE" table "$INTERFACE"
 ip rule add from "$IPADDR/32" table "$INTERFACE"
 ip rule add to "$IPADDR/32" table "$INTERFACE"

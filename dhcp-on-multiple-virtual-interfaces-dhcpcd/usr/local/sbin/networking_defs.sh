@@ -92,19 +92,33 @@ get_ip_for_interface ()
     echo "$IP"
 }
 
-
-get_gw_for_interface ()
+get_network_for_interface ()
 {
     PARAM_INTERFACE="$1"
-    GW=`/sbin/ip -o -4 addr list $PARAM_INTERFACE | head -n 1 | sed s/.*'inet '// | sed s/\\\/.*//`
+    FULL_IP=`/sbin/ip -o -4 addr list $PARAM_INTERFACE | head -n 1 | sed s/.*'inet '// | sed s/\\\/.*//`
+    SHORT_MASK=`/sbin/ip -o -4 addr list $PARAM_INTERFACE | head -n 1 | sed s/.*\\\/// | sed s/\\ .*//`
+    SHIFT_BITS="$((32 - $SHORT_MASK))"
 
-    echo "$GW"
-}
+    # Full mask
+    MASK_BITS="4294967295"
+    MASK_BITS="$(($MASK_BITS >> $SHIFT_BITS))"
+    MASK_BITS="$(($MASK_BITS << $SHIFT_BITS))"
 
-get_ip_and_mask_for_interface ()
-{
-    PARAM_INTERFACE="$1"
-    IP_AND_MASK=`/sbin/ip -o -4 addr list $PARAM_INTERFACE | head -n 1 | sed s/.*'inet '// | sed s/\\ .*//`
-    
-    echo "$IP_AND_MASK"
+IFS='.' read -r IP1 IP2 IP3 IP4 <<EOF
+$FULL_IP
+EOF
+
+
+    IP_BITS="$(($IP1))"
+    IP_BITS="$((($IP_BITS << 8) + $IP2))"
+    IP_BITS="$((($IP_BITS << 8) + $IP3))"
+    IP_BITS="$((($IP_BITS << 8) + $IP4))"
+
+    NETWORK_BITS="$(($MASK_BITS & $IP_BITS))"
+    IP4="$((($NETWORK_BITS >> 0) & 255))"
+    IP3="$((($NETWORK_BITS >> 8) & 255))"
+    IP2="$((($NETWORK_BITS >> 16) & 255))"
+    IP1="$((($NETWORK_BITS >> 24) & 255))"
+
+    echo "$IP1.$IP2.$IP3.$IP4/$SHORT_MASK"
 }

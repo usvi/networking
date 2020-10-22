@@ -4,7 +4,7 @@
 
 
 ADDR_PUB1=$(get_ip_for_interface "$IF_PUB1")
-ADDR_PUB_GW=$(get_gw_for_interface "$IF_PUB0")
+ADDR_PUB_GW=$(get_ip_for_interface "$IF_PUB0")
 
 
 # Flush tables
