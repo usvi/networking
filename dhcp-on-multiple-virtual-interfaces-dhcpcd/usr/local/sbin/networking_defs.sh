@@ -30,7 +30,7 @@ NEW_ROUTERS_TIME_TRESHOLD=60
 LOCK_WAIT_MAX_SECS=30
 
 # USE flags: Define non-zero if want enabled
-USE_DY_FI="no"
+USE_DY_FI="yes"
 USE_OPENVPN="no"
 
 try_lock ()

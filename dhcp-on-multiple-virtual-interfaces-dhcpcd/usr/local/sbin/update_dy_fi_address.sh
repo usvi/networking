@@ -5,8 +5,6 @@
 INTERFACE=$1
 HOSTNAME=$2
 DYFI_CREDENTIALS=$(head -n 1 /etc/dy.fi_credentials.dat)
-EMAIL_USERNAME=`echo "$DYFI_CREDENTIALS" | sed s/:.*//`
-PLAIN_PASSWORD=`echo "$DYFI_CREDENTIALS" | sed s/.*://`
 DYFI_ADDRESS_DATA_DIR=/var/lib/dyfi
 UPDATE=no
 TIME_TRESHOLD=432000 #432000 = 5 days
@@ -47,8 +45,8 @@ fi
 
 if [ "$UPDATE" = "yes" ]; then
 
-    # Using wget because it is default in many installations
-    wget --bind-address="$CURRENT_IP" -T "$DYFI_WAIT_TIME" -q -O - --http-user="$EMAIL_USERNAME" --http-passwd="$PLAIN_PASSWORD" "https://www.dy.fi/nic/update?hostname=$HOSTNAME" &> /dev/null
+    # Curl interface binding is absolutely needed!
+    curl --interface "$INTERFACE" -m "$DYFI_WAIT_TIME" -D - --user "$DYFI_CREDENTIALS" "https://www.dy.fi/nic/update?hostname=$HOSTNAME"
     
     
     if [ "$?" -eq 0 ];
