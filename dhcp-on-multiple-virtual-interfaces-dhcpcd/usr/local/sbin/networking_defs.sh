@@ -104,7 +104,7 @@ get_gw_for_interface ()
 get_ip_and_mask_for_interface ()
 {
     PARAM_INTERFACE="$1"
-    IP_AND_MASK=`/sbin/ip -o -4 addr list virtual0 | head -n 1 | sed s/.*'inet '// | sed s/\\\ .*//`
-
+    IP_AND_MASK=`/sbin/ip -o -4 addr list $PARAM_INTERFACE | head -n 1 | sed s/.*'inet '// | sed s/\\ .*//`
+    
     echo "$IP_AND_MASK"
 }
