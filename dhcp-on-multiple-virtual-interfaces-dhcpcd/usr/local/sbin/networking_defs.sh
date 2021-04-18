@@ -2,12 +2,12 @@
 
 # Names for interfaces
 # Virtual interface for macvlan magic
-IF_VIRTUAL_BASE=enp4s0
+IF_VIRTUAL_BASE=enp1s0
 # IF_PUB0 is explicit GW in scripts
 IF_PUB0=virtual0
 IF_PUB1=virtual1
 IF_PUB2=virtual2
-IF_LAN=enp3s0
+IF_LAN=enp2s0
 # For Openvpn
 IF_TUN=tun0
 

@@ -27,8 +27,8 @@ iface virtual2 inet dhcp
 
 
 # LAN physical interface eth2 00:90:0b:3e:01:5d
-auto enp3s0
-iface enp3s0 inet static
+auto enp2s0
+iface enp2s0 inet static
       address 172.16.8.254
       netmask 255.255.255.0
       network 172.16.8.0
