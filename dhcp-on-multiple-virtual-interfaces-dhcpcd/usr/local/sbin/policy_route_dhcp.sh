@@ -67,12 +67,20 @@ fi
 if [ "$INTERFACE" = "$IF_PUB2" ];
 then
     # Remove rules for LAN
-    while ip rule show | grep "$ADDR_PRIV2.*$RANGE_LAN" &>/dev/null; do
-        ip rule delete from "$ADDR_PRIV2" to "$RANGE_LAN"
+    while ip rule show | grep "$ADDR_PRIV2_1.*$RANGE_LAN" &>/dev/null; do
+        ip rule delete from "$ADDR_PRIV2_1" to "$RANGE_LAN"
     done
     # Use specific lookup table for interface 2
-    ip rule add from "$ADDR_PRIV2" lookup "$IF_PUB2"
+    ip rule add from "$ADDR_PRIV2_1" lookup "$IF_PUB2"
     # But use main lookup table for LAN stuff
-    ip rule add from "$ADDR_PRIV2" to "$RANGE_LAN" lookup main
+    ip rule add from "$ADDR_PRIV2_1" to "$RANGE_LAN" lookup main
+
+    # The same for secondary http redirect
+    while ip rule show | grep "$ADDR_PRIV2_2.*$RANGE_LAN" &>/dev/null; do
+        ip rule delete from "$ADDR_PRIV2_2" to "$RANGE_LAN"
+    done
+    ip rule add from "$ADDR_PRIV2_2" lookup "$IF_PUB2"
+    ip rule add from "$ADDR_PRIV2_2" to "$RANGE_LAN" lookup main
+    
 fi
 
